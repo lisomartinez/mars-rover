@@ -13,4 +13,5 @@ como moverse
 - b = mover hacia atrás un punto (backwards)
 - l = rotar 90 grados a la izquierda
 - r = rotar 90 grados a la derecha
+
 Resolverlo por medio de TDD.

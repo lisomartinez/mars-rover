@@ -45,6 +45,10 @@ class North < Direction
   def move_backward(coordinate)
     Coordinate.new(coordinate.x + 1, coordinate.y)
   end
+
+  def to_s
+    "NORTH"
+  end
 end
 
 
@@ -64,6 +68,10 @@ class South < Direction
   def move_backward(coordinate)
     Coordinate.new(coordinate.x - 1, coordinate.y)
   end
+
+  def to_s
+    "SOUTH"
+  end
 end
 
 class West < Direction
@@ -81,6 +89,10 @@ class West < Direction
 
   def move_backward(coordinate)
     Coordinate.new(coordinate.x, coordinate.y + 1)
+  end
+
+  def to_s
+    "WEST"
   end
 end
 
@@ -100,11 +112,17 @@ class East < Direction
   def move_backward(coordinate)
     Coordinate.new(coordinate.x, coordinate.y - 1)
   end
+
+  def to_s
+    "EAST"
+  end
 end
 
 class MarsRover
+  private
   attr_accessor :coordinate, :direction
 
+  public
   def initialize(coordinate = Coordinate.new(0, 0), direction = North.new)
     self.coordinate = Coordinate.new(x = 0, y = 0)
     self.direction = direction
@@ -128,27 +146,37 @@ class MarsRover
     }
   end
 
+  def is_at
+    [self.coordinate.x, self.coordinate.y]
+  end
+
+  def heading_to
+    self.direction.to_s
+  end
+
+  def set_at(direction)
+    self.direction = direction
+  end
   private
 
   def move_forwards
     self.coordinate = self.direction.move_forward(coordinate)
   end
 
-  private
 
   def move_backwards
     self.coordinate = self.direction.move_backward(coordinate)
   end
 
-  private
 
   def rotate_left
     self.direction = self.direction.rotate_left
   end
 
-  private
 
   def rotate_right
     self.direction = self.direction.rotate_right
   end
+
+
 end

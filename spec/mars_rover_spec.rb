@@ -7,154 +7,166 @@ describe MarsRover do
     subject { MarsRover.new(direction: North.new) }
   end
 
-  after do
-    # Do nothing
+  def assert_is_at_heading_to(position, heading)
+    expect(subject.is_at).to eq(position)
+    expect(subject.heading_to).to eq(heading)
   end
 
-  context 'when condition' do
+  context 'when MarsRover receives a command' do
     it 'start at position [0,0] by default' do
-      expect(subject.coordinate).to eq(Coordinate.new(0, 0))
+      assert_is_at_heading_to([0, 0], "NORTH")
     end
+
     it 'start with pointing to north' do
-      expect(subject.direction.is_a? North).to be(true)
+      assert_is_at_heading_to([0, 0], "NORTH")
     end
+
     it 'do nothing when received an empty command' do
       subject.receive_command("")
-      expect(subject.coordinate).to eq(Coordinate.new(0, 0))
-      expect(subject.direction.is_a? North).to be(true)
+      assert_is_at_heading_to([0, 0], "NORTH")
     end
 
     it 'change direction from N to W when receives a command with an l' do
       subject.receive_command("l")
-      expect(subject.coordinate).to eq(Coordinate.new(0, 0))
-      expect(subject.direction.is_a? West).to be(true)
+
+      assert_is_at_heading_to([0, 0], "WEST")
     end
+
     it 'change direction from W to S when receives a command with a l' do
-      subject.direction = West.new
+      subject.set_at(West.new)
       subject.receive_command("l")
-      expect(subject.coordinate).to eq(Coordinate.new(0, 0))
-      expect(subject.direction.is_a? South).to be(true)
+
+      assert_is_at_heading_to([0, 0], "SOUTH")
     end
+
     it 'change direction from S to E when receives a command with a l' do
-      subject.direction = South.new
+      subject.set_at(South.new)
       subject.receive_command("l")
-      expect(subject.coordinate).to eq(Coordinate.new(0, 0))
-      expect(subject.direction.is_a? East).to be(true)
+
+      assert_is_at_heading_to([0, 0], "EAST")
     end
 
     it 'change direction from E to N when receives a command with a l' do
-      subject.direction = East.new
+      subject.set_at(East.new)
       subject.receive_command("l")
-      expect(subject.coordinate).to eq(Coordinate.new(0, 0))
-      expect(subject.direction.is_a? North).to be(true)
+
+      assert_is_at_heading_to([0, 0], "NORTH")
     end
+
     it 'change direction from N to E when receives a command with an r' do
       subject.receive_command("r")
-      expect(subject.coordinate).to eq(Coordinate.new(0, 0))
-      expect(subject.direction.is_a? East).to be(true)
+
+      assert_is_at_heading_to([0, 0], "EAST")
     end
+
     it 'change direction from E to S when receives a command with an r' do
-      subject.direction = East.new
+      subject.set_at(East.new)
       subject.receive_command("r")
-      expect(subject.coordinate).to eq(Coordinate.new(0, 0))
-      expect(subject.direction.is_a? South).to be(true)
+
+      assert_is_at_heading_to([0, 0], "SOUTH")
     end
+
     it 'change direction from S to W when receives a command with an r' do
-      subject.direction = South.new
+      subject.set_at(South.new)
       subject.receive_command("r")
-      expect(subject.coordinate).to eq(Coordinate.new(0, 0))
-      expect(subject.direction.is_a? West).to be(true)
+
+      assert_is_at_heading_to([0, 0], "WEST")
     end
+
     it 'change direction from W to N when receives a command with an r' do
-      subject.direction = West.new
+      subject.set_at(West.new)
       subject.receive_command("r")
-      expect(subject.coordinate).to eq(Coordinate.new(0, 0))
-      expect(subject.direction.is_a? North).to be(true)
+
+      assert_is_at_heading_to([0, 0], "NORTH")
     end
+
     it 'when it starts from N and makes a full turn to the right it returns to N' do
       subject.receive_command("r")
       subject.receive_command("r")
       subject.receive_command("r")
       subject.receive_command("r")
-      expect(subject.coordinate).to eq(Coordinate.new(0, 0))
-      expect(subject.direction.is_a? North).to be(true)
+
+      assert_is_at_heading_to([0, 0], "NORTH")
     end
+
     it 'when it starts from N and makes a full turn to left it returns to N' do
       subject.receive_command("l")
       subject.receive_command("l")
       subject.receive_command("l")
       subject.receive_command("l")
-      expect(subject.coordinate).to eq(Coordinate.new(0, 0))
-      expect(subject.direction.is_a? North).to be(true)
-    end
 
+      assert_is_at_heading_to([0, 0], "NORTH")
+    end
 
     it 'moves forward to N when receives a command with an f' do
       subject.receive_command("f")
-      expect(subject.coordinate).to eq(Coordinate.new(-1, 0))
-      expect(subject.direction.is_a? North).to be(true)
+
+      assert_is_at_heading_to([-1, 0], "NORTH")
     end
-    it 'moves backwards to S when receives a command with an b without changing direction' do
+
+    it 'moves backwards to S when receives its direction is N and receives a command with an b without changing direction' do
       subject.receive_command("b")
-      expect(subject.coordinate).to eq(Coordinate.new(1, 0))
-      expect(subject.direction.is_a? North).to be(true)
+
+      assert_is_at_heading_to([1, 0], "NORTH")
     end
+
     it 'moves forward to E when its direction is E and receives command with an f' do
-      subject.direction = East.new
+      subject.set_at(East.new)
       subject.receive_command("f")
-      expect(subject.coordinate).to eq(Coordinate.new(0, 1))
-      expect(subject.direction.is_a? East).to be(true)
-    end
-    it 'moves backwards to W when receives a command with an b without changing direction' do
-      subject.direction = East.new
-      subject.receive_command("b")
-      expect(subject.coordinate).to eq(Coordinate.new(0, -1))
-      expect(subject.direction.is_a? East).to be(true)
+
+      assert_is_at_heading_to([0, 1], "EAST")
     end
 
-    it 'moves forward to W when its direction is E and receives command with an f' do
-      subject.direction = West.new
-      subject.receive_command("f")
-      expect(subject.coordinate).to eq(Coordinate.new(0, -1))
-      expect(subject.direction.is_a? West).to be(true)
-    end
-    it 'moves backwards to W when receives a command with an b without changing direction' do
-      subject.direction = West.new
+    it 'moves backwards to W when its direction is E and receives a command with an b without changing direction' do
+      subject.set_at(East.new)
       subject.receive_command("b")
-      expect(subject.coordinate).to eq(Coordinate.new(0, 1))
-      expect(subject.direction.is_a? West).to be(true)
+
+      assert_is_at_heading_to([0, -1], "EAST")
     end
+
+    it 'moves forward to W when its direction is W and receives command with an f' do
+      subject.set_at(West.new)
+      subject.receive_command("f")
+
+      assert_is_at_heading_to([0, -1], "WEST")
+    end
+
+    it 'moves backwards to E when its direction is W and receives a command with an b without changing direction' do
+      subject.set_at(West.new)
+      subject.receive_command("b")
+
+      assert_is_at_heading_to([0, 1], "WEST")
+    end
+
     it 'moves forward to S when its direction is S and receives command with an f' do
-      subject.direction = South.new
+      subject.set_at(South.new)
       subject.receive_command("f")
-      expect(subject.coordinate).to eq(Coordinate.new(1, 0))
-      expect(subject.direction.is_a? South).to be(true)
-    end
-    it 'moves backwards to S when receives a command with an b without changing direction' do
-      subject.direction = South.new
-      subject.receive_command("b")
-      expect(subject.coordinate).to eq(Coordinate.new(-1, 0))
-      expect(subject.direction.is_a? South).to be(true)
+
+      assert_is_at_heading_to([1, 0], "SOUTH")
     end
 
-    it 'do nothing with an empty command' do
-      subject.receive_command("")
-      expect(subject.coordinate).to eq(Coordinate.new(0, 0))
-      expect(subject.direction.is_a? North).to be(true)
+    it 'moves backwards to N when its direction is S and receives a command  with an b without changing direction' do
+      subject.set_at(South.new)
+      subject.receive_command("b")
+
+      assert_is_at_heading_to([-1, 0], "SOUTH")
     end
+
     it 'receives an compound command of f and r it moves forward and then turns to the right' do
       subject.receive_command("fr")
-      expect(subject.coordinate).to eq(Coordinate.new(-1, 0))
-      expect(subject.direction.is_a? East).to be(true)
+
+      assert_is_at_heading_to([-1, 0], "EAST")
     end
+
     it 'receives an compound command of f and r it moves forward and then turns to the right' do
       subject.receive_command("frb")
-      expect(subject.coordinate).to eq(Coordinate.new(-1, -1))
-      expect(subject.direction.is_a? East).to be(true)
+
+      assert_is_at_heading_to([-1, -1], "EAST")
     end
 
     it 'raise an exception if commands have errors' do
       expect { (subject.receive_command('x')) }.to raise_error(message = 'error en la lectura del comando')
     end
+
   end
 end
